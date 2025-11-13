@@ -27,6 +27,7 @@ public class CardScanSheet {
     // NEW: Customizable UI text
     public var headerTitle: String?
     public var instructionText: String?
+    public var showFlashButton: Bool = false
 
     public init() {}
 
@@ -58,6 +59,9 @@ public class CardScanSheet {
         if let instructionText = self.instructionText {
             vc.instructionText = instructionText
         }
+
+        // Set flash button visibility
+        vc.torchButton.isHidden = !self.showFlashButton
 
         // Overwrite completion closure to retain self until called
         let overwrittenCompletion: (CardScanSheetResult) -> Void = { status in
