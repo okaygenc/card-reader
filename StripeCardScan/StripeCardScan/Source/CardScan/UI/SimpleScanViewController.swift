@@ -96,17 +96,71 @@ class SimpleScanViewController: ScanBaseViewController {
         return button
     }()
 
-    // COMMENTED OUT: Flash/Torch button - hidden for now
-    // var torchButton: UIButton = {
-    //     var button = UIButton(type: .system)
-    //     button.setTitleColor(.white, for: .normal)
-    //     button.tintColor = .white
-    //     button.setTitle(SimpleScanViewController.torchButtonString, for: .normal)
-    //     return button
-    // }()
-
     var torchButton: UIButton = {
         var button = UIButton(type: .system)
+
+        // Create custom flash icon from SVG
+        let size = CGSize(width: 30, height: 30)
+        let image = UIGraphicsImageRenderer(size: size).image { context in
+            let ctx = context.cgContext
+
+            // Draw background circle with white 40% opacity
+            ctx.setFillColor(UIColor.white.withAlphaComponent(0.4).cgColor)
+            let circleRect = CGRect(x: 0, y: 0, width: 30, height: 30)
+            ctx.fillEllipse(in: circleRect)
+
+            // Draw lightning bolt path
+            ctx.setFillColor(UIColor(red: 0x13/255.0, green: 0x17/255.0, blue: 0x17/255.0, alpha: 1.0).cgColor)
+
+            let path = UIBezierPath()
+            path.move(to: CGPoint(x: 13.0881, y: 22.5))
+            path.addCurve(
+                to: CGPoint(x: 12.5224, y: 21.8238),
+                controlPoint1: CGPoint(x: 12.508, y: 21.9097),
+                controlPoint2: CGPoint(x: 12.5118, y: 21.9944)
+            )
+            path.addCurve(
+                to: CGPoint(x: 13.4009, y: 17),
+                controlPoint1: CGPoint(x: 12.5335, y: 21.7453),
+                controlPoint2: CGPoint(x: 12.5553, y: 21.6562)
+            )
+            path.addLine(to: CGPoint(x: 9.99995, y: 17))
+            path.addCurve(
+                to: CGPoint(x: 9.6112, y: 16.1857),
+                controlPoint1: CGPoint(x: 9.51448, y: 16.3478),
+                controlPoint2: CGPoint(x: 9.55184, y: 16.2591)
+            )
+            path.addLine(to: CGPoint(x: 16.4603, y: 7.71879))
+            path.addCurve(
+                to: CGPoint(x: 17.1355, y: 7.54362),
+                controlPoint1: CGPoint(x: 16.6464, y: 7.54913),
+                controlPoint2: CGPoint(x: 16.7684, y: 7.5175)
+            )
+            path.addCurve(
+                to: CGPoint(x: 17.4812, y: 8.17504),
+                controlPoint1: CGPoint(x: 17.2518, y: 7.59221),
+                controlPoint2: CGPoint(x: 17.4752, y: 7.89554)
+            )
+            path.addLine(to: CGPoint(x: 16.5996, y: 13))
+            path.addLine(to: CGPoint(x: 19.9999, y: 13))
+            path.addCurve(
+                to: CGPoint(x: 20.3887, y: 13.8144),
+                controlPoint1: CGPoint(x: 20.4854, y: 13.6523),
+                controlPoint2: CGPoint(x: 20.4481, y: 13.741)
+            )
+            path.addLine(to: CGPoint(x: 13.5387, y: 22.2813))
+            path.addCurve(
+                to: CGPoint(x: 13.0881, y: 22.5),
+                controlPoint1: CGPoint(x: 13.4164, y: 22.4043),
+                controlPoint2: CGPoint(x: 13.2604, y: 22.48)
+            )
+            path.close()
+
+            ctx.addPath(path.cgPath)
+            ctx.fillPath()
+        }
+
+        button.setImage(image.withRenderingMode(.alwaysOriginal), for: .normal)
         button.isHidden = true // Hidden by default
         return button
     }()
