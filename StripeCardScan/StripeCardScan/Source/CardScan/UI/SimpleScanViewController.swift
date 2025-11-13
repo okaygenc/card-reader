@@ -73,29 +73,41 @@ class SimpleScanViewController: ScanBaseViewController {
     var cornerView: CornerView?
 
     // our UI components
-    var descriptionText = UILabel()
+    var descriptionText = UILabel() // Hidden - replaced with headerTitleLabel
+    var headerTitleLabel = UILabel() // NEW: Header title (e.g., "Scan the Credit Card")
+    var instructionLabel = UILabel() // NEW: Instruction text below card frame
     var privacyLinkText = UITextView()
     var privacyLinkTextHeightConstraint: NSLayoutConstraint?
 
+    // Updated to use back arrow instead of X close icon
     var closeButton: UIButton = {
         var button = UIButton(type: .system)
         button.tintColor = .white
+
+        // Create custom back arrow icon (18x15 size from SVG)
         if #available(iOS 13.0, *) {
-            let config = UIImage.SymbolConfiguration(pointSize: 20, weight: .medium)
-            let closeImage = UIImage(systemName: "xmark", withConfiguration: config)
-            button.setImage(closeImage, for: .normal)
+            let config = UIImage.SymbolConfiguration(pointSize: 15, weight: .medium)
+            let backImage = UIImage(systemName: "arrow.left", withConfiguration: config)
+            button.setImage(backImage, for: .normal)
         } else {
-            button.setTitle("✕", for: .normal)
+            button.setTitle("←", for: .normal)
             button.titleLabel?.font = UIFont.systemFont(ofSize: 24, weight: .medium)
         }
         return button
     }()
 
+    // COMMENTED OUT: Flash/Torch button - hidden for now
+    // var torchButton: UIButton = {
+    //     var button = UIButton(type: .system)
+    //     button.setTitleColor(.white, for: .normal)
+    //     button.tintColor = .white
+    //     button.setTitle(SimpleScanViewController.torchButtonString, for: .normal)
+    //     return button
+    // }()
+
     var torchButton: UIButton = {
         var button = UIButton(type: .system)
-        button.setTitleColor(.white, for: .normal)
-        button.tintColor = .white
-        button.setTitle(SimpleScanViewController.torchButtonString, for: .normal)
+        button.isHidden = true // Hidden by default
         return button
     }()
 
@@ -116,6 +128,10 @@ class SimpleScanViewController: ScanBaseViewController {
     static var closeButtonString = String.Localized.close
     static var torchButtonString = String.Localized.torch
     static var privacyLinkString = String.Localized.scanCardExpectedPrivacyLinkText()
+
+    // NEW: Customizable strings for header and instruction
+    var headerTitle: String = "Scan the Credit Card"
+    var instructionText: String = "Hold your card inside the frame"
 
     weak var delegate: SimpleScanDelegate?
     var scanPerformancePriority: ScanPerformance = .fast
@@ -187,9 +203,9 @@ class SimpleScanViewController: ScanBaseViewController {
         regionOfInterestCornerRadius = 15.0
 
         let children: [UIView] = [
-            previewView, blurView, roiView, descriptionText, closeButton, torchButton, numberText,
-            expiryText, nameText, expiryLayoutView, enableCameraPermissionsButton,
-            enableCameraPermissionsText, privacyLinkText,
+            previewView, blurView, roiView, descriptionText, headerTitleLabel, instructionLabel,
+            closeButton, torchButton, numberText, expiryText, nameText, expiryLayoutView,
+            enableCameraPermissionsButton, enableCameraPermissionsText, privacyLinkText,
         ]
         for child in children {
             self.view.addSubview(child)
@@ -201,6 +217,8 @@ class SimpleScanViewController: ScanBaseViewController {
         setupCloseButtonUi()
         setupTorchButtonUi()
         setupDescriptionTextUi()
+        setupHeaderTitleUi() // NEW: Setup header title
+        setupInstructionLabelUi() // NEW: Setup instruction label
         setupCardDetailsUi()
         setupDenyUi()
         setupPrivacyLinkTextUi()
@@ -236,10 +254,29 @@ class SimpleScanViewController: ScanBaseViewController {
     }
 
     func setupDescriptionTextUi() {
+        // HIDDEN: Replaced with headerTitleLabel
+        descriptionText.isHidden = true
         descriptionText.text = SimpleScanViewController.descriptionString
         descriptionText.textColor = .white
         descriptionText.textAlignment = .center
         descriptionText.font = descriptionText.font.withSize(30)
+    }
+
+    // NEW: Setup header title label
+    func setupHeaderTitleUi() {
+        headerTitleLabel.text = headerTitle
+        headerTitleLabel.textColor = .white
+        headerTitleLabel.textAlignment = .center
+        headerTitleLabel.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
+    }
+
+    // NEW: Setup instruction label below card frame
+    func setupInstructionLabelUi() {
+        instructionLabel.text = instructionText
+        instructionLabel.textColor = .white
+        instructionLabel.textAlignment = .center
+        instructionLabel.font = UIFont.systemFont(ofSize: 15, weight: .regular)
+        instructionLabel.numberOfLines = 0
     }
 
     func setupCardDetailsUi() {
@@ -332,9 +369,9 @@ class SimpleScanViewController: ScanBaseViewController {
     // MARK: - Autolayout constraints
     func setupConstraints() {
         let children: [UIView] = [
-            previewView, blurView, roiView, descriptionText, closeButton, torchButton, numberText,
-            expiryText, nameText, expiryLayoutView, enableCameraPermissionsButton,
-            enableCameraPermissionsText, privacyLinkText,
+            previewView, blurView, roiView, descriptionText, headerTitleLabel, instructionLabel,
+            closeButton, torchButton, numberText, expiryText, nameText, expiryLayoutView,
+            enableCameraPermissionsButton, enableCameraPermissionsText, privacyLinkText,
         ]
         for child in children {
             child.translatesAutoresizingMaskIntoConstraints = false
@@ -346,6 +383,8 @@ class SimpleScanViewController: ScanBaseViewController {
         setupCloseButtonConstraints()
         setupTorchButtonConstraints()
         setupDescriptionTextConstraints()
+        setupHeaderTitleConstraints() // NEW: Header title constraints
+        setupInstructionLabelConstraints() // NEW: Instruction label constraints
         setupCardDetailsConstraints()
         setupDenyConstraints()
         setupPrivacyLinkTextConstraints()
@@ -386,12 +425,32 @@ class SimpleScanViewController: ScanBaseViewController {
     }
 
     func setupDescriptionTextConstraints() {
+        // Hidden - constraints kept for compatibility
         descriptionText.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32).isActive =
             true
         descriptionText.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32)
             .isActive = true
         descriptionText.bottomAnchor.constraint(equalTo: roiView.topAnchor, constant: -16).isActive =
             true
+    }
+
+    // NEW: Header title constraints - centered in header next to back button
+    func setupHeaderTitleConstraints() {
+        let margins = view.layoutMarginsGuide
+        NSLayoutConstraint.activate([
+            headerTitleLabel.centerYAnchor.constraint(equalTo: closeButton.centerYAnchor),
+            headerTitleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            headerTitleLabel.leadingAnchor.constraint(greaterThanOrEqualTo: closeButton.trailingAnchor, constant: 16),
+        ])
+    }
+
+    // NEW: Instruction label constraints - 140px below card frame, centered
+    func setupInstructionLabelConstraints() {
+        NSLayoutConstraint.activate([
+            instructionLabel.topAnchor.constraint(equalTo: roiView.bottomAnchor, constant: 140),
+            instructionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+            instructionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+        ])
     }
 
     func setupCardDetailsConstraints() {

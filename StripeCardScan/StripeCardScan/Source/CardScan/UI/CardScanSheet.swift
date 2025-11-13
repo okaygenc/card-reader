@@ -24,6 +24,10 @@ import UIKit
 /// A drop-in class that presents a sheet for a customer to scan their card
 public class CardScanSheet {
 
+    // NEW: Customizable UI text
+    public var headerTitle: String?
+    public var instructionText: String?
+
     public init() {}
 
     /// Presents a sheet for a customer to scan their card
@@ -46,6 +50,14 @@ public class CardScanSheet {
 
         let vc = SimpleScanViewController()
         vc.delegate = self
+
+        // NEW: Set customizable UI text if provided
+        if let headerTitle = self.headerTitle {
+            vc.headerTitle = headerTitle
+        }
+        if let instructionText = self.instructionText {
+            vc.instructionText = instructionText
+        }
 
         // Overwrite completion closure to retain self until called
         let overwrittenCompletion: (CardScanSheetResult) -> Void = { status in
