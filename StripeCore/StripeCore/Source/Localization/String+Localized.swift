@@ -19,7 +19,7 @@ import Foundation
         }
 
         public static var scan_card_title_capitalization: String {
-            STPLocalizedString("Scan Card", "Text for button to scan a credit card")
+            STPLocalizedString("Kredi Kartını Tara", "Text for button to scan a credit card")
         }
 
         public static var scan_card: String {
@@ -35,17 +35,8 @@ import Foundation
         }
 
         public static func scanCardExpectedPrivacyLinkText() -> NSAttributedString? {
-            let stringData = Data(String.Localized.scan_card_privacy_link_text.utf8)
-            let stringOptions: [NSAttributedString.DocumentReadingOptionKey: Any] = [
-                .documentType: NSAttributedString.DocumentType.html,
-                .characterEncoding: String.Encoding.utf8.rawValue,
-            ]
-
-            return try? NSAttributedString(
-                data: stringData,
-                options: stringOptions,
-                documentAttributes: nil
-            )
+            // Privacy link text removed
+            return nil
         }
     }
 }

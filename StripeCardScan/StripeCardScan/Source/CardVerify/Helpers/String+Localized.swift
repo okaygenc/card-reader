@@ -18,7 +18,7 @@ extension String.Localized {
 
     static var torch: String {
         return STPLocalizedString(
-            "Torch",
+            "Flaş",
             "Label for the button that toggles the camera's torch"
         )
     }

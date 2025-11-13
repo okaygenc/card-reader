@@ -79,9 +79,15 @@ class SimpleScanViewController: ScanBaseViewController {
 
     var closeButton: UIButton = {
         var button = UIButton(type: .system)
-        button.setTitleColor(.white, for: .normal)
         button.tintColor = .white
-        button.setTitle(SimpleScanViewController.closeButtonString, for: .normal)
+        if #available(iOS 13.0, *) {
+            let config = UIImage.SymbolConfiguration(pointSize: 20, weight: .medium)
+            let closeImage = UIImage(systemName: "xmark", withConfiguration: config)
+            button.setImage(closeImage, for: .normal)
+        } else {
+            button.setTitle("✕", for: .normal)
+            button.titleLabel?.font = UIFont.systemFont(ofSize: 24, weight: .medium)
+        }
         return button
     }()
 
