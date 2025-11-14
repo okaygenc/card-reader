@@ -184,8 +184,16 @@ class SimpleScanViewController: ScanBaseViewController {
     static var privacyLinkString = String.Localized.scanCardExpectedPrivacyLinkText()
 
     // NEW: Customizable strings for header and instruction
-    var headerTitle: String = "Scan the Credit Card"
-    var instructionText: String = "Hold your card inside the frame"
+    public var headerTitle: String = "Scan the Credit Card" {
+        didSet {
+            headerTitleLabel.text = headerTitle
+        }
+    }
+    public var instructionText: String = "Hold your card inside the frame" {
+        didSet {
+            instructionLabel.text = instructionText
+        }
+    }
 
     weak var delegate: SimpleScanDelegate?
     var scanPerformancePriority: ScanPerformance = .fast
