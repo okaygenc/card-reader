@@ -96,7 +96,7 @@ class SimpleScanViewController: ScanBaseViewController {
         return button
     }()
 
-    var torchButton: UIButton = {
+    public var torchButton: UIButton = {
         var button = UIButton(type: .system)
 
         // Create custom flash icon from SVG
